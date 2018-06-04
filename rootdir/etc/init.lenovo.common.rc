@@ -1,0 +1,23 @@
+on early-init
+    # Create modem FSG mount point
+    mkdir /fsg 755 root root
+
+service smart_charger /system/bin/smart_charger
+    class main
+    user root
+
+service fingerprintd /system/bin/fingerprintd
+    class late_start
+    user system
+
+service vfmservice /system/bin/vfmService
+    user system
+    group system
+    class main
+    disabled
+
+on property:sys.listeners.registered=true
+    start vfmservice
+
+on property:vold.decrypt=trigger_restart_framework
+    start vfmservice

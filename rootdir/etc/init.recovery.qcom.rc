@@ -1,0 +1,13 @@
+on fs
+    mkdir /firmware 0771 system system
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro nosuid nodev
+
+service sbinqseecomd /sbin/qseecomd.sh
+    oneshot
+    disabled
+    user root
+    group root
+    seclabel u:r:recovery:s0
+
+on property:ro.crypto.state=encrypted
+    start sbinqseecomd
